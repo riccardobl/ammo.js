@@ -1,4 +1,4 @@
-
+ 
 // Linear Math
 
 interface btIDebugDraw {
@@ -84,13 +84,16 @@ interface btQuaternion {
 btQuaternion implements btQuadWord;
 
 interface btMatrix3x3 {
+  void btMatrix3x3();
   void setEulerZYX(float ex, float ey, float ez);
   void getRotation([Ref] btQuaternion q);
   [Value] btVector3 getRow(long y);
+  void setValue(float xx, float xy, float xz, float yx, float yy, float yz , float zx, float zy, float zz);
 };
 
 interface btTransform {
   void btTransform();
+  void btTransform([Ref] btMatrix3x3 m);
   void btTransform([Ref] btQuaternion q, [Ref] btVector3 v);
 
   void setIdentity();
@@ -427,13 +430,27 @@ interface btStridingMeshInterface {
 };
 
 interface btIndexedMesh {
+  void btIndexedMesh();
   attribute long m_numTriangles;
+  attribute long m_triangleIndexStride;
+  attribute long m_numVertices;
+  attribute long m_vertexStride;
+  void setVertexBase(VoidPtr v);
+  void setTriangleIndexBase(VoidPtr v);
+  VoidPtr getVertexBase();
+  VoidPtr getTriangleIndexBase();
 };
 
 interface btIndexedMeshArray {
   long size();
   [Const, Ref] btIndexedMesh at(long n);
 };
+
+
+interface btTriangleIndexVertexArray{
+  void btTriangleIndexVertexArray(long numTriangles, VoidPtr triangleIndexBase, long triangleIndexStride, long numVertices, VoidPtr vertexBase, long vertexStride);
+};
+btTriangleIndexVertexArray implements btStridingMeshInterface;
 
 interface btTriangleMesh {
   void btTriangleMesh(optional boolean use32bitIndices, optional boolean use4componentVertices);
@@ -442,8 +459,8 @@ interface btTriangleMesh {
   void addIndex(long index);
  [Ref] btIndexedMeshArray getIndexedMeshArray();
 };
-btTriangleMesh implements btStridingMeshInterface;
-
+btTriangleMesh implements btTriangleIndexVertexArray;
+ 
 enum PHY_ScalarType {
     "PHY_FLOAT",
     "PHY_DOUBLE",
@@ -666,6 +683,7 @@ interface btOverlappingPairCache {
 interface btAxisSweep3 {
   void btAxisSweep3([Ref] btVector3 worldAabbMin, [Ref] btVector3 worldAabbMax, optional long maxHandles, optional btOverlappingPairCache pairCache, optional boolean disableRaycastAccelerator);
 };
+btAxisSweep3 implements btBroadphaseInterface;
 
 interface btBroadphaseInterface {
   btOverlappingPairCache getOverlappingPairCache();
@@ -677,6 +695,7 @@ interface btCollisionConfiguration {
 interface btDbvtBroadphase {
   void btDbvtBroadphase();
 };
+btDbvtBroadphase implements btBroadphaseInterface;
 
 interface btBroadphaseProxy {
   attribute long m_collisionFilterGroup;

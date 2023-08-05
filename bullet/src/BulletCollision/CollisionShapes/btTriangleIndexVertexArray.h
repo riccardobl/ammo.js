@@ -45,7 +45,10 @@ ATTRIBUTE_ALIGNED16( struct)	btIndexedMesh
    // mesh data in single precision..
    PHY_ScalarType m_vertexType;
 
-
+	void setTriangleIndexBase(void *ptr){m_triangleIndexBase = (const unsigned char *)ptr;}
+	void setVertexBase(void *ptr){m_vertexBase = (const unsigned char *)ptr;}
+	void* getTriangleIndexBase() { return (void *)m_triangleIndexBase;}
+	void* getVertexBase() const { return (void *)m_vertexBase;}
    btIndexedMesh()
 	   :m_indexType(PHY_INTEGER),
 #ifdef BT_USE_DOUBLE_PRECISION
@@ -86,7 +89,8 @@ public:
 
 	//just to be backwards compatible
 	btTriangleIndexVertexArray(int numTriangles,int* triangleIndexBase,int triangleIndexStride,int numVertices,btScalar* vertexBase,int vertexStride);
-	
+	btTriangleIndexVertexArray(int numTriangles,void* triangleIndexBase,int triangleIndexStride,int numVertices,void* vertexBase,int vertexStride);
+
 	void	addIndexedMesh(const btIndexedMesh& mesh, PHY_ScalarType indexType = PHY_INTEGER)
 	{
 		m_indexedMeshes.push_back(mesh);
