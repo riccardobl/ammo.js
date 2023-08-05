@@ -56,6 +56,15 @@ public:
 	{
 		return &m_indices[0];
 	}
+	
+	const btVector3* vertexAt(int i){
+		return &m_vertices[i];
+	}
+
+	unsigned int indexAt(int i){
+		return m_indices[i];
+	}
+
 };
 
 #endif //BT_SHAPE_HULL_H

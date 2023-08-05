@@ -17,7 +17,7 @@ subject to the following restrictions:
 #define BT_TRIANGLE_CALLBACK_H
 
 #include "LinearMath/btVector3.h"
-
+#include "LinearMath/btAlignedObjectArray.h"
 
 ///The btTriangleCallback provides a callback for each overlapping triangle when calling processAllTriangles.
 ///This callback is called by processAllTriangles for all btConcaveShape derived class, such as  btBvhTriangleMeshShape, btStaticPlaneShape and btHeightfieldTerrainShape.
@@ -37,6 +37,15 @@ public:
 	virtual void internalProcessTriangleIndex(btVector3* triangle,int partId,int  triangleIndex) = 0;
 };
 
+
+class TriangleCallbackImpl : public btTriangleCallback {
+	public:
+		btAlignedObjectArray<btVector3>	m_Triangles;
+		virtual void processTriangle(btVector3* triangle, int partId, int triangleIndex) {
+			m_Triangles.push_back(*triangle);
+		}
+	
+};
 
 
 #endif //BT_TRIANGLE_CALLBACK_H

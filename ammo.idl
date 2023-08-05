@@ -294,7 +294,7 @@ interface btBoxShape {
   void setMargin(float margin);
   float getMargin();
 };
-btBoxShape implements btCollisionShape;
+btBoxShape implements btConvexShape;
 
 interface btCapsuleShape {
   void btCapsuleShape(float radius, float height);
@@ -304,7 +304,7 @@ interface btCapsuleShape {
   float getRadius();
   float getHalfHeight();
 };
-btCapsuleShape implements btCollisionShape;
+btCapsuleShape implements btConvexShape;
 
 interface btCapsuleShapeX {
   void btCapsuleShapeX(float radius, float height);
@@ -325,7 +325,7 @@ interface btCylinderShape {
   void setMargin(float margin);
   float getMargin();
 };
-btCylinderShape implements btCollisionShape;
+btCylinderShape implements btConvexShape;
 
 interface btCylinderShapeX {
   void btCylinderShapeX([Ref] btVector3 halfExtents);
@@ -346,17 +346,17 @@ interface btSphereShape {
   void setMargin(float margin);
   float getMargin();
 };
-btSphereShape implements btCollisionShape;
+btSphereShape implements btConvexShape;
 
 interface btMultiSphereShape {
   void btMultiSphereShape([Const] btVector3 positions, [Const] float[] radii, long numPoints);
 };
-btMultiSphereShape implements btCollisionShape;
+btMultiSphereShape implements btConvexShape;
 
 interface btConeShape {
   void btConeShape(float radius, float height);
 };
-btConeShape implements btCollisionShape;
+btConeShape implements btConvexShape;
 
 interface btConeShapeX {
   void btConeShapeX(float radius, float height);
@@ -403,14 +403,26 @@ interface btConvexHullShape {
   void recalcLocalAabb();
   [Const] btConvexPolyhedron getConvexPolyhedron();
 };
-btConvexHullShape implements btCollisionShape;
+btConvexHullShape implements btConvexShape;
 
 interface btShapeHull {
   void btShapeHull(btConvexShape shape);
   boolean buildHull(float margin);
   long numVertices();
+  long numIndices();
+   [Const] btVector3 vertexAt(long i);
+  long indexAt(long i);
   [Const] btVector3 getVertexPointer();
 };
+
+interface btTriangleCallback {
+};
+
+interface TriangleCallbackImpl {
+    void TriangleCallbackImpl();
+    [Value] attribute btVector3Array m_Triangles;
+};
+TriangleCallbackImpl implements btTriangleCallback;
 
 interface btCompoundShape {
   void btCompoundShape(optional boolean enableDynamicAabbTree);
@@ -471,6 +483,7 @@ enum PHY_ScalarType {
 };
 
 interface btConcaveShape {
+  void processAllTriangles(btTriangleCallback callback, [Const, Ref] btVector3 aabbMin, [Const, Ref] btVector3 aabbMax);
 };
 btConcaveShape implements btCollisionShape;
 
@@ -949,6 +962,8 @@ interface btDiscreteDynamicsWorld {
   void setContactAddedCallback(long funcpointer);
   void setContactProcessedCallback(long funcpointer);
   void setContactDestroyedCallback(long funcpointer);
+
+  void addVehicle(btRaycastVehicle vehicle);
 };
 btDiscreteDynamicsWorld implements btDynamicsWorld;
 
