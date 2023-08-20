@@ -157,6 +157,7 @@ interface btCollisionObject {
   void setUserPointer(VoidPtr userPointer);
   [Const] btBroadphaseProxy getBroadphaseHandle();
   float getCcdMotionThreshold();
+  float getCcdSweptSphereRadius();
 };
 
 [NoDelete]
